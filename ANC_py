@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# Automatic Node Generator for Husarion
+# Python version
+# Artur Bereit
+
+echo "Argument $1"
+echo Nazwa folderu:
+echo "Argument $2"
+echo Nazwa podfolderu - tzw paczki:
+echo "Argument $3"
+echo Nazwa pliku .launch
+echo "Argunment $4" 
+echo Nazwa pliku glownego z rozszerzeniem .py 
+
+mkdir -p ~/$1/src
+cd ~/$1/src
+catkin_init_workspace
+cd ~/$1
+catkin_make
+
+cd ~/$1/src
+catkin_create_pkg $2 roscpp
+cd ~/$1/src/$2/
+mkdir scripts
+cd ~/$1/src/$2/scripts
+
+touch $4
+chmod +x $4
+#cd
+#cd $1/src/$2/scripts/$4
+
+cat $4
+echo "#!/usr/bin/env python" >> endl >> $4
+echo "import rospy" >> endl >> $4
+echo "def main():" >> endl >> $4
+echo "  rospy.init_node('main', anonymous=True)" >> endl >> $4
+echo "  rate = rospy.Rate(10) # 10hz" >> endl >> $4
+echo "  while not rospy.is_shutdown():" >> endl >> $4
+echo "      rate.sleep()" >> endl >> $4
+echo "if __name__ == '__main__':" >> endl >> $4
+echo "  try:" >> endl >> $4
+echo "      main()" >> endl >> $4
+echo "  except rospy.ROSInterruptException:" >> endl >> $4
+echo "      pass" >> $4
+
+cd 
+cd ~/$1 
+catkin_make
+
+cd
+mkdir ~/$1/src/$2/launch
+#roslaunch $2 $3
+
+cd ~/$1/src/$2/launch 
+touch $3
+chmod +x $3
+cat $3
+
+echo "<launch>" >> endl >> $3
+echo "<node pkg=\""$2"\" type=\""$4"\" name=\""$4"\" output=\"screen\">" >> endl >> $3
+echo "</node>" >> endl >> $3
+echo "</launch>" >> $3
+
+#source ~/$1/devel/setup.sh
+. ~/$1/devel/setup.sh
+roslaunch $2 $3
+

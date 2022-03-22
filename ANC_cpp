@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# Automatic Node Generator for Husarion
+# C++ version
+# Artur Bereit
+
+echo "Argument $1"
+echo Nazwa folderu:
+echo "Argument $2"
+echo Nazwa podfolderu - tzw paczki:
+echo "Argument $3"
+echo Nazwa pliku .launch
+echo "Argunment $4" 
+echo Nazwa pliku glownego z rozszerzeniem .cpp 
+
+mkdir -p ~/$1/src
+cd ~/$1/src
+catkin_init_workspace
+cd ~/$1
+catkin_make
+
+cd ~/$1/src
+catkin_create_pkg $2 roscpp
+cd ~/$1/src/$2/src
+
+touch $4
+
+cd ~/$1/src/$2/src/$4
+
+cat $4
+echo "#include <ros/ros.h>" >> endl >> $4
+echo "int main(int argc, char **argv)" {>> endl >> $4
+echo "ros::init(argc, argv, \""node"\");" >> endl >> $4
+echo "ros::NodeHandle n(\""~"\");" >> endl >> $4
+echo "ros::Rate loop_rate(50);" >> endl >> $4
+echo " while (ros::ok()) {" >> endl >> $4
+echo "ros::spinOnce();" >> endl >> $4
+echo "loop_rate.sleep();" >> endl >> $4
+echo "} } " >> endl >> $4
+
+cd ~/$1/src/$2
+mkdir oldCMake
+cp CMakeLists.txt oldCMake/CMakeLists.txt
+rm -rf CMakeLists.txt
+
+touch CMakeLists.txt
+
+cat CMakeLists.txt
+echo "cmake_minimum_required(VERSION 3.0.2)" >> endl >> CMakeLists.txt
+echo "project("$2")" >> endl >> CMakeLists.txt
+echo "add_compile_options(-std=c++11)" >> endl >> CMakeLists.txt
+echo "find_package(catkin REQUIRED COMPONENTS" >> endl >> CMakeLists.txt
+echo "roscpp" >> endl >> CMakeLists.txt
+echo ")" >> endl >> CMakeLists.txt
+echo "catkin_package(" >> endl >> CMakeLists.txt
+echo "CATKIN_DEPENDS" >> endl >> CMakeLists.txt
+echo ")" >> endl >> CMakeLists.txt
+echo "include_directories(\${catkin_INCLUDE_DIRS})" >> endl >> CMakeLists.txt
+echo "add_executable(\${PROJECT_NAME}_node src/"$4")" >> endl >> CMakeLists.txt
+echo "target_link_libraries(\${PROJECT_NAME}_node" >> endl >> CMakeLists.txt
+echo "\${catkin_LIBRARIES}" >> endl >> CMakeLists.txt
+echo ")" >> endl >> CMakeLists.txt
+
+cd ~/$1
+catkin_make
+
+mkdir ~/$1/src/$2/launch
+#roslaunch $2 $3
+
+cd ~/$1/src/$2/launch 
+touch $3
+chmod +x $3
+cat $3
+
+echo "<launch>" >> endl >> $3
+echo "<node pkg=\""$2"\" type=\""$2"_node\" name=\""$2"_node\" output=\"screen\">" >> endl >> $3
+echo "</node>" >> endl >> $3
+echo "</launch>" >> endl >> $3
+
+#source ~/$1/devel/setup.sh
+. ~/$1/devel/setup.sh
+roslaunch $2 $3
+
