@@ -1,7 +1,6 @@
-# ANC
-Simple Automatic Node Creator for Python or Cpp [ROS] 
+# ANC - Simple Automatic Node Creator for Python or Cpp [ROS] 
 
-Quick Start Guide
+## Quick Start Guide 
 
 1. Download file ANC_py or ANC_cpp depending on the one used language (Python or C++)
 2. Put file in the destination folder, for example ~/home/husarion/
