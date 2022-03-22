@@ -8,6 +8,6 @@ Quick Start Guide
 3. Add add execute permissions for used file:   $ chmod +x ANC_py (Python)  /  $ chmod +x ANC_cpp (C++)
 4. Run the file with arguments: 
 
-![alt text](https://github.com/vAtomowy/ANC/foto.jpg?raw=true)
+![foto](https://user-images.githubusercontent.com/25866897/159588230-0a954005-dabb-48df-8890-1ea2abad4e6a.PNG)
   
 5. Enjoy the newly built node in local path: /home/your_device/your_created_node  !
