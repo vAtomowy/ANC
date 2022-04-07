@@ -34,9 +34,10 @@ cat $4
 echo "#!/usr/bin/env python" >> endl >> $4
 echo "import rospy" >> endl >> $4
 echo "def main():" >> endl >> $4
-echo "  rospy.init_node('main', anonymous=True)" >> endl >> $4
+echo "  rospy.init_node('talker', anonymous=True)" >> endl >> $4
 echo "  rate = rospy.Rate(10) # 10hz" >> endl >> $4
 echo "  while not rospy.is_shutdown():" >> endl >> $4
+echo "      print(\"Hello World\")" >> endl >> $4
 echo "      rate.sleep()" >> endl >> $4
 echo "if __name__ == '__main__':" >> endl >> $4
 echo "  try:" >> endl >> $4
@@ -44,6 +45,7 @@ echo "      main()" >> endl >> $4
 echo "  except rospy.ROSInterruptException:" >> endl >> $4
 echo "      pass" >> $4
 
+rm -rf endl
 cd 
 cd ~/$1 
 catkin_make
@@ -55,14 +57,9 @@ mkdir ~/$1/src/$2/launch
 cd ~/$1/src/$2/launch 
 touch $3
 chmod +x $3
+
 cat $3
-
-echo "<launch>" >> endl >> $3
-echo "<node pkg=\""$2"\" type=\""$4"\" name=\""$4"\" output=\"screen\">" >> endl >> $3
-echo "</node>" >> endl >> $3
+echo "<launch>"  >> $3
+echo " <node pkg=\""$2"\" type=\""$4"\" name=\""$4"\" output=\"screen\"> " >> $3
+echo " </node> "  >> $3
 echo "</launch>" >> $3
-
-#source ~/$1/devel/setup.sh
-. ~/$1/devel/setup.sh
-roslaunch $2 $3
-
